@@ -144,6 +144,13 @@ story = {
             'N': ('No', 'quit')
         }
     },
+    'winner': {
+        'text': "Congratulations! You survived. Would you like to play again? (Y/N)",
+        'choices': {
+            'Y': ('Yes', 'start'),
+            'N': ('No', 'quit')
+        }
+    },
     'quit': {
         'text': "Thanks for playing. Goodbye.",
         'choices': {}
