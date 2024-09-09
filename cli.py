@@ -1,19 +1,16 @@
-
-
-
-
 import sqlite3
 import os
-conn = sqlite3.connect('surviving_nyc.db')
+conn = sqlite3.connect('data.db')
 
 
 
 def create_table():
     sql = """   
-        CREATE TABLE IF NOT EXISTS citizen (
+        CREATE TABLE IF NOT EXISTS player (
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            health INTEGER NOT NULL
+            username TEXT,
+            score INTEGER,
+            games_played INTEGER
         );
     """
     cursor = conn.cursor()
@@ -21,10 +18,22 @@ def create_table():
     conn.commit()
 
 def delete_table():
-    sql = "DROP TABLE IF EXISTS citizen"
+    sql = "DROP TABLE IF EXISTS player"
     cursor = conn.cursor()
     cursor.execute(sql)
     conn.commit()
+
+def add_score(username, score):
+    """Adds username and score to the db"""
+    sql = """
+        INSERT INTO player (username, score)
+        VALUES (?, ?)
+    """
+    cursor = conn.cursor()
+    cursor.execute(sql, [username, score])
+    conn.commit()
+
+add_score('bob', 4)
 
 class Game:
     def start(self):
