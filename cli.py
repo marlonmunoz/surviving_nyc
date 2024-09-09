@@ -173,7 +173,7 @@ story = {
     },
     'rideshare_survive': {
         'text': "You sit quietly while the driver speeds through the streets. You narrowly avoid a crash and arrive at work, alive but late.",
-        'choices': {'Next': (Go to Workplace Dilemma, 'workplace_dilemma')}
+        'choices': {'Next': ("Go to Workplace Dilemma", 'workplace_dilemma')}
     },
     'survive_the_day': {
         'text': "You wisely ignore the office gossip and make it through the day unscathed. You survive and head home.",
