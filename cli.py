@@ -45,7 +45,7 @@ class Stats:
 
 story = {
     'start': {
-        'text': 'You wake up in your Manhattan apartmnt. Do you:',
+        'text': 'You wake up in your Manhattan apartment. Do you:',
         'choices': {
             'A': ('Hit snooze and sleep in', 'snooze'),
             'B': ('Get up right away and start the day', 'morning_routine'),
@@ -91,7 +91,7 @@ story = {
         }
     },
     'rideshare_madness': {
-        'text': "You call a rideshare. The driver is blasting musoic and speeding recklessly. Do you:",
+        'text': "You call a rideshare. The driver is blasting music and speeding recklessly. Do you:",
         'choices': {
             'A': ('Tell the driver to slow down', 'death_rideshare_crash'),
             'B': ('Sit quietly and hope for the best', 'rideshare_survive')
@@ -137,8 +137,8 @@ story = {
         'text': "You sit quietly while the driver speeds through the streets. You narrowly avoid a crash and arrive at work, alive but late.",
         'choices': {}
     },
-    'game_over': {
-        'text': "Game Over! You either survived or met a tragic end. Would you ;like tyo play again? (Y/N)",
+    'loser': {
+        'text': "Oh no! Sadly, you met a tragic end. Would you like to play again? (Y/N)",
         'choices': {
             'Y': ('Yes', 'start'),
             'N': ('No', 'quit')
