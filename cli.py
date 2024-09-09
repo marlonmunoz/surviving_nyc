@@ -203,6 +203,28 @@ story = {
     }
 }
 
+def display_choices(choices):
+    # Print each choice with its corresponding key
+    for key, value in choices.items():
+        print(f"{key}: {value[0]}")
+    
+    # Prompt the user to select a choice
+    selected_choice = input("Select a choice: ").strip().upper()
+    
+    # Return the selected choice
+    return selected_choice
+
+def start_game():
+    current_story = story['start']
+    
+    while True:
+        print(current_story['text'])
+        if not current_story['choices']:
+            break
+        selected_choice = display_choices(current_story['choices'])
+        next_key = current_story['choices'][selected_choice][1]
+        current_story = story[next_key]
+
 
 def main_menu():
     create_table()
@@ -250,7 +272,7 @@ def main_menu():
         choice = input("                                Enter your choice >>> ")
 
         if choice == '1':
-            game.start()
+            start_game()
         elif choice == '2':
             stats.view()
         elif choice == '3':
