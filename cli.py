@@ -2,6 +2,7 @@ import sqlite3
 import os
 import subprocess
 
+######################################################  MAIN MENU PIZAAZZ  ########################################################
 SOUND_DIR = "./shade_sound"
 
 def color_text(text, color_code):
@@ -30,8 +31,8 @@ story = {
     'start': {
         'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
         'choices': {
-            color_text(1, 34): ('Hit snooze and sleep in', 'snooze'),
-            color_text(2, 34): ('Get up right away and start the day', 'morning_routine'),
+            1: ('Hit snooze and sleep in', 'snooze'),
+            2: ('Get up right away and start the day', 'morning_routine'),
         }
     },
     'snooze': {
@@ -185,6 +186,8 @@ story = {
         'choices': {}
     }
 }
+
+#####################################################  DATABASE TABLE STUFF  #####################################################
 conn = sqlite3.connect('data.db')
 
 def create_table():
@@ -217,27 +220,14 @@ def add_score(username, score, player_choices):
     cursor.execute(sql, [username, score, 1, choices_str])
     conn.commit()
 
-
-
-
-
-
-
-
 class Stats:
     def view(self):
         print("Displaying stats...")
 
-
-
-
-
-
-
 def display_choices(choices):
     # Print each choice with its corresponding key
     for key, value in choices.items():
-        print(f"{key}: {value[0]}")
+        print(f"{color_text(key, 34)}: {value[0]}")
     while True:
         try:
             selected_choice = int(input("Select a choice: ").strip())
@@ -271,25 +261,25 @@ def start_game():
 
 def handle_end_game(player_choices):
     print("\nUnfortunately, you have met a tragic end at the hands of the Big Apple...")
-    display_leaderboard(player_choices)
+    # display_leaderboard(player_choices)
     input("\nPress any key to return to the main menu...")
     main_menu()
 
-def display_leaderboard(player_choices):
-    print("\n======== LEADERBOARD =========")
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*), AVG(score),  AVG(games_played) FROM player")
-    total_players, avg_score, avg_games_played = cursor.fetchone()
-    print(f"Total players: {total_players}")
-    print(f"Average Survivability Rate: {avg_score}")
-    print(f"Average Games Played: {avg_games_played}")
-    print("======== Choices Analysis ========")
-    for choice in player_choices:
-        cursor.execute(f"SELECT COUNT(*) FROM player WHERE score = ?", (choice,))
-        similiar_choices = cursor.fetchone()[0]
-        percentage = (similiar_choices / total_players) * 100
-        print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
-    print("================================")
+# def display_leaderboard(player_choices):
+#     print("\n======== LEADERBOARD =========")
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT COUNT(*), AVG(score),  AVG(games_played) FROM player")
+#     total_players, avg_score, avg_games_played = cursor.fetchone()
+#     print(f"Total players: {total_players}")
+#     print(f"Average Survivability Rate: {avg_score}")
+#     print(f"Average Games Played: {avg_games_played}")
+#     print("======== Choices Analysis ========")
+#     for choice in player_choices:
+#         cursor.execute(f"SELECT COUNT(*) FROM player WHERE score = ?", (choice,))
+#         similiar_choices = cursor.fetchone()[0]
+#         percentage = (similiar_choices / total_players) * 100
+#         print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
+#     print("================================")
 
 #######################################################  MAIN MENU   ############################################################
 def main_menu():
