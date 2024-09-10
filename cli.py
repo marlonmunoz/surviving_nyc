@@ -29,7 +29,7 @@ class Game:
 ###################################################  DICTIONARY  ##############################################################                    
 story = {
     'start': {
-        'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
+        'text': 'You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:',
         'choices': {
             1: ('Hit snooze and sleep in', 'snooze'),
             2: ('Get up right away and start the day', 'morning_routine'),
@@ -227,7 +227,7 @@ class Stats:
 def display_choices(choices):
     # Print each choice with its corresponding key
     for key, value in choices.items():
-        print(f"{color_text(key, 34)}: {value[0]}")
+        print(f"{color_text(key, 34)}: {color_text(value[0], 32)}")  
     while True:
         try:
             selected_choice = int(input("Select a choice: ").strip())
