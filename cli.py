@@ -23,14 +23,15 @@ def delete_table():
     cursor.execute(sql)
     conn.commit()
 
-def add_score(username, score):
+def add_score(username, score, player_choices):
     """Adds username and score to the db"""
     sql = """
-        INSERT INTO player (username, score)
-        VALUES (?, ?)
+        INSERT INTO player (username, score, games_played, choices)
+        VALUES (?, ?, ?, ?)
     """
+    choices_str = ','.join(player_choices)
     cursor = conn.cursor()
-    cursor.execute(sql, [username, score])
+    cursor.execute(sql, [username, score, 1, choices_str])
     conn.commit()
 
 add_score('bob', 4)
@@ -55,7 +56,7 @@ story = {
         'text': "You hit snooze and oversleep. You're now late for work.",
         'choices': {
             'A': ('Take the subway and hope for the best', 'subway_chaos'),
-            'B': ('Walk to work", "street_hazards'),
+            'B': ('Walk to work', 'street_hazards'),
         }
     },
     'morning_routine': {
@@ -216,19 +217,43 @@ def display_choices(choices):
 
 def start_game():
     current_story = story['start']
+    player_choices = []
     
     while True:
         print(current_story['text'])
         if not current_story['choices']:
+            handle_end_game(player_choices)
             break
         if len(current_story['choices']) == 1 and 'Next' in current_story['choices']:
             next_key = current_story['choices']['Next'][1]
             current_story = story[next_key]
         else:
             selected_choice = display_choices(current_story['choices'])
+            player_choices.append(selected_choice)
             next_key = current_story['choices'][selected_choice][1]
             current_story = story[next_key]
 
+def handle_end_game(player_choices):
+    print("\nUnfortunately, you have met a tragic end at the hands of the Big Apple...")
+    display_leaderboard(player_choices)
+    input("\nPress any key to return to the main menu...")
+    main_menu()
+
+def display_leaderboard(player_choices):
+    print("\n======== LEADERBOARD =========")
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*), AVG(score),  AVG(games_played) FROM player")
+    total_players, avg_score, avg_games_played = cursor.fetchone()
+    print(f"Total players: {total_players}")
+    print(f"Average Survivability Rate: {avg_score}")
+    print(f"Average Games Played: {avg_games_played}")
+    print("======== Choices Analysis ========")
+    for choice in player_choices:
+        cursor.execute(f"SELECT COUNT(*) FROM player WHERE score = ?", (choice,))
+        similiar_choices = cursor.fetchone()[0]
+        percentage = (similiar_choices / total_players) * 100
+        print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
+    print("================================")
 
 def main_menu():
     create_table()
