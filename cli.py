@@ -2,40 +2,6 @@ import sqlite3
 import os
 import subprocess
 
-conn = sqlite3.connect('data.db')
-
-def create_table():
-    sql = """   
-        CREATE TABLE IF NOT EXISTS player (
-            id INTEGER PRIMARY KEY,
-            username TEXT,
-            score INTEGER,
-            games_played INTEGER
-        );
-    """
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    conn.commit()
-
-def delete_table():
-    sql = "DROP TABLE IF EXISTS player"
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    conn.commit()
-
-def add_score(username, score, player_choices):
-    """Adds username and score to the db"""
-    sql = """
-        INSERT INTO player (username, score, games_played, choices)
-        VALUES (?, ?, ?, ?)
-    """
-    choices_str = ','.join(player_choices)
-    cursor = conn.cursor()
-    cursor.execute(sql, [username, score, 1, choices_str])
-    conn.commit()
-
-
-
 SOUND_DIR = "./shade_sound"
 
 def color_text(text, color_code):
@@ -59,16 +25,7 @@ class Game:
             self.sound_process = None
         print(color_text("Game has quit!", 31))
 
-
-
-
-class Stats:
-    def view(self):
-        print("Displaying stats...")
-
-
-
-
+###################################################  DICTIONARY  ##############################################################                    
 story = {
     'start': {
         'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
@@ -228,6 +185,52 @@ story = {
         'choices': {}
     }
 }
+conn = sqlite3.connect('data.db')
+
+def create_table():
+    sql = """   
+        CREATE TABLE IF NOT EXISTS player (
+            id INTEGER PRIMARY KEY,
+            username TEXT,
+            score INTEGER,
+            games_played INTEGER
+        );
+    """
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+
+def delete_table():
+    sql = "DROP TABLE IF EXISTS player"
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    conn.commit()
+
+def add_score(username, score, player_choices):
+    """Adds username and score to the db"""
+    sql = """
+        INSERT INTO player (username, score, games_played, choices)
+        VALUES (?, ?, ?, ?)
+    """
+    choices_str = ','.join(player_choices)
+    cursor = conn.cursor()
+    cursor.execute(sql, [username, score, 1, choices_str])
+    conn.commit()
+
+
+
+
+
+
+
+
+class Stats:
+    def view(self):
+        print("Displaying stats...")
+
+
+
+
 
 
 
@@ -288,7 +291,7 @@ def display_leaderboard(player_choices):
         print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
     print("================================")
 
-
+#######################################################  MAIN MENU   ############################################################
 def main_menu():
     create_table()
     game = Game()
