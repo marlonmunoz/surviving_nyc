@@ -221,9 +221,13 @@ def start_game():
         print(current_story['text'])
         if not current_story['choices']:
             break
-        selected_choice = display_choices(current_story['choices'])
-        next_key = current_story['choices'][selected_choice][1]
-        current_story = story[next_key]
+        if len(current_story['choices']) == 1 and 'Next' in current_story['choices']:
+            next_key = current_story['choices']['Next'][1]
+            current_story = story[next_key]
+        else:
+            selected_choice = display_choices(current_story['choices'])
+            next_key = current_story['choices'][selected_choice][1]
+            current_story = story[next_key]
 
 
 def main_menu():
