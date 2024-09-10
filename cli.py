@@ -1,6 +1,6 @@
 import sqlite3
 import os
-
+import subprocess
 
 conn = sqlite3.connect('data.db')
 
@@ -34,26 +34,39 @@ def add_score(username, score, player_choices):
     cursor.execute(sql, [username, score, 1, choices_str])
     conn.commit()
 
-# add_score('bob', 4)
+
+
+SOUND_DIR = "/Users/Marlon/Development/code/surviving_nyc/shade_sound"
+
+def color_text(text, color_code):
+    return f"\033[{color_code}m{text}\033[0m"
+
+def play_sound(file_path):
+    file_path = os.path.join(SOUND_DIR, file_path )
+    return subprocess.Popen(["afplay", file_path])
 
 class Game:
+    def __init__(self):
+        self.sound_process = None
+
     def start(self):
-        print(color_text("Game has started!"))
-    
+        print(color_text("Game has started!", 30))
+        self.sound_process = play_sound("Survivin_NYC_main_menu.mp3")
+
+    def quit(self):
+        if self.sound_process:
+            self.sound_process.terminate()
+            self.sound_process = None
+        print(color_text("Game has quit!", 31))
+
+
+
 
 class Stats:
     def view(self):
         print("Displaying stats...")
 
-# ADDS TEXT COLOR TO THE QUESTIONS
-def color_text(text, color_code):
-    return f"\033[{color_code}m{text}\033[0m"
 
-# The color codes used are:
-# 31 for red
-# 32 for green
-# 33 for yellow
-# 34 for blue
 
 
 story = {
@@ -216,6 +229,8 @@ story = {
     }
 }
 
+
+
 def display_choices(choices):
     # Print each choice with its corresponding key
     for key, value in choices.items():
@@ -271,6 +286,7 @@ def display_leaderboard(player_choices):
 def main_menu():
     create_table()
     game = Game()
+    game.start()
     stats = Stats()
     
     print(color_text(""" 
@@ -314,17 +330,23 @@ def main_menu():
         choice = input("                                Enter your choice >>> ")
 
         if choice == '1':
+            if game.sound_process:
+                game.sound_process.terminate()
+            game.sound_process = play_sound("CGA_sound.mp3")
             start_game()
         elif choice == '2':
             stats.view()
         elif choice == '3':
+            game.quit()
             print("Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
 
+
 if __name__ == '__main__':
     main_menu()
+    
 
 
 
