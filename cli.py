@@ -307,7 +307,7 @@ def main_menu():
         """, 33))
     print(color_text("                                1. Start Your Journey", 32))
     print("                                2. View Stats")
-    print("                                3. Quit")
+    print(color_text("                                3. Quit", 30))
     print(" ")
 
     while True:
