@@ -73,76 +73,76 @@ story = {
     'start': {
         'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
         'choices': {
-            color_text('A', 34): ('Hit snooze and sleep in', 'snooze'),
-            color_text('B', 34): ('Get up right away and start the day', 'morning_routine'),
+            color_text(1, 34): ('Hit snooze and sleep in', 'snooze'),
+            color_text(2, 34): ('Get up right away and start the day', 'morning_routine'),
         }
     },
     'snooze': {
         'text': "You hit snooze and oversleep. You're now late for work.",
         'choices': {
-            'A': ('Take the subway and hope for the best', 'subway_chaos'),
-            'B': ('Walk to work', 'street_hazards'),
+            1: ('Take the subway and hope for the best', 'subway_chaos'),
+            2: ('Walk to work', 'street_hazards'),
         }
     },
     'morning_routine': {
         'text': "You wake up on time, feeling slightly groggy but ready for the day .  Do You:",
         'choices': {
-            'A': ('Take the subway to work', 'subway_chaos'),
-            'B': ('Call a rideshare', 'rideshare_madness'),
-            'C': ('Walk to work', 'street_hazards')
+            1: ('Take the subway to work', 'subway_chaos'),
+            2: ('Call a rideshare', 'rideshare_madness'),
+            3: ('Walk to work', 'street_hazards')
         }
     },
     'subway_chaos': {
         'text': "You enter the subway. It's packed, and tensions are high. A fight breaks out. Do you:",
         'choices': {
-            'A': ('Try to stop the fight', 'death_subway_fight'),
-            'B': ('Move to another car', 'rat_encounter'),
-            'C': ('Ignore it and listen to music', 'death_electrocution')
+            1: ('Try to stop the fight', 'death_subway_fight'),
+            2: ('Move to another car', 'rat_encounter'),
+            3: ('Ignore it and listen to music', 'death_electrocution')
         }
     },
     'rat_encounter': {
         'text': "You move to another car and find yourself face-to-face with a rat. Do you:",
         'choices': {
-            'A': ('Kick the rat', 'death_rat_bite'),
-            'B': ('Try to catch rat', 'hospital_escape'),
-            'C': ('Ignore the rat', 'subway_survive')
+            1: ('Kick the rat', 'death_rat_bite'),
+            2: ('Try to catch rat', 'hospital_escape'),
+            3: ('Ignore the rat', 'subway_survive')
         }
     },
     'street_hazards': {
         'text': "You decide to walk to work. Midway, you encounter a street performer juggling flaming swords. Do you:",
         'choices': {
-            'A': ('Confront the performer', 'death_street_performer_sword'),
-            'B': ('Try to walk around him', 'death_sewer_fall'),
-            'C': ('Watch the performance', 'performer_survival')
+            1: ('Confront the performer', 'death_street_performer_sword'),
+            2: ('Try to walk around him', 'death_sewer_fall'),
+            3: ('Watch the performance', 'performer_survival')
         }
     },
     'rideshare_madness': {
         'text': "You call a rideshare. The driver is blasting music and speeding recklessly. Do you:",
         'choices': {
-            'A': ('Tell the driver to slow down', 'death_rideshare_crash'),
-            'B': ('Sit quietly and hope for the best', 'rideshare_survive')
+            1: ('Tell the driver to slow down', 'death_rideshare_crash'),
+            2: ('Sit quietly and hope for the best', 'rideshare_survive')
         }
     },
     'workplace_dilemma': {
         'text': "You finally make it to your offic, but your boss is standing at the entrance looking furious. You're laste for an important meeting. Do you:",
         'choices': {
-            'A': ('Make up an excuse', 'death_fired_by_boss'),
-            'B': ('Apologize sincerely', 'office_drama'),
-            'C': ('Sneak past and pretend nothing happened', 'death_fired_sneak')
+            1: ('Make up an excuse', 'death_fired_by_boss'),
+            2: ('Apologize sincerely', 'office_drama'),
+            3: ('Sneak past and pretend nothing happened', 'death_fired_sneak')
         }
     },
     'office_drama': {
         'text': "You overhear a coworker gossiping about you. They say you're on the verge of being fired. Do you:",
         'choices': {
-            'A': ('Confront them', 'death_office_fight'),
-            'B': ('Ignore it and focus on work', 'survive_the_day')
+            1: ('Confront them', 'death_office_fight'),
+            2: ('Ignore it and focus on work', 'survive_the_day')
         }
     },
     'unemployment_blues': {
         'text': "After being fired, you're walkling to the unemployment office. You pass a street vendor selling suspiciously cheap hot dogs. Do you:",
         'choices': {
-            'A': ('Eat the hot dog', 'death_food_poisoning'),
-            'B': ('Ignore it and keep walking', 'survive_unemployment')
+            1: ('Eat the hot dog', 'death_food_poisoning'),
+            2: ('Ignore it and keep walking', 'survive_unemployment')
         }
     },
     'death_subway_fight': {
@@ -235,28 +235,34 @@ def display_choices(choices):
     # Print each choice with its corresponding key
     for key, value in choices.items():
         print(f"{key}: {value[0]}")
-    
-    # Prompt the user to select a choice
-    selected_choice = input("Select a choice: ").strip().upper()
-    
-    # Return the selected choice
-    return selected_choice
+    while True:
+        try:
+            selected_choice = int(input("Select a choice: ").strip())
+            if selected_choice in choices:
+                return selected_choice
+            else:
+                print("Invalid choice, please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
 
 def start_game():
     current_story = story['start']
-    player_choices = []
+    player_choices = [] # Track players choices
     
     while True:
         print(current_story['text'])
+        # check if there are any more choices (death or survival)
         if not current_story['choices']:
             handle_end_game(player_choices)
             break
+        # if theres only one automatic transition, proceed automatically
         if len(current_story['choices']) == 1 and 'Next' in current_story['choices']:
             next_key = current_story['choices']['Next'][1]
             current_story = story[next_key]
         else:
+            #Otherwise prompt the player for input
             selected_choice = display_choices(current_story['choices'])
-            player_choices.append(selected_choice)
+            player_choices.append(selected_choice) # logs players choices
             next_key = current_story['choices'][selected_choice][1]
             current_story = story[next_key]
 
