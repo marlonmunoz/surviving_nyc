@@ -1,8 +1,8 @@
 import sqlite3
 import os
+
+
 conn = sqlite3.connect('data.db')
-
-
 
 def create_table():
     sql = """   
@@ -34,22 +34,34 @@ def add_score(username, score, player_choices):
     cursor.execute(sql, [username, score, 1, choices_str])
     conn.commit()
 
-add_score('bob', 4)
+# add_score('bob', 4)
 
 class Game:
     def start(self):
-        print("Game has started!")
+        print(color_text("Game has started!"))
+    
 
 class Stats:
     def view(self):
         print("Displaying stats...")
 
+# ADDS TEXT COLOR TO THE QUESTIONS
+def color_text(text, color_code):
+    return f"\033[{color_code}m{text}\033[0m"
+
+# The color codes used are:
+# 31 for red
+# 32 for green
+# 33 for yellow
+# 34 for blue
+
+
 story = {
     'start': {
-        'text': 'You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:',
+        'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
         'choices': {
-            'A': ('Hit snooze and sleep in', 'snooze'),
-            'B': ('Get up right away and start the day', 'morning_routine'),
+            color_text('A', 34): ('Hit snooze and sleep in', 'snooze'),
+            color_text('B', 34): ('Get up right away and start the day', 'morning_routine'),
         }
     },
     'snooze': {
@@ -255,12 +267,13 @@ def display_leaderboard(player_choices):
         print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
     print("================================")
 
+
 def main_menu():
     create_table()
     game = Game()
     stats = Stats()
     
-    print(""" 
+    print(color_text(""" 
         --------------------------------------------------------------------
         --------------------------------------------------------------------
           
@@ -291,8 +304,8 @@ def main_menu():
                                          \  \/    |                          
         --------------------------------------------------------------------
         --------------------------------------------------------------------
-        """)
-    print("                                1. Start Your Journey")
+        """, 33))
+    print(color_text("                                1. Start Your Journey", 32))
     print("                                2. View Stats")
     print("                                3. Quit")
     print(" ")
