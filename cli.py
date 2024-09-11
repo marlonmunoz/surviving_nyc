@@ -358,9 +358,9 @@ def update_player_stats(survived):
 
 def handle_end_game(survived):
     if survived:
-        print("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ")
+        print(color_text("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ", 34))
     else:
-        print("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!")
+        print(color_text("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!", 34))
         
     display_stats()
     
