@@ -231,7 +231,7 @@ player_stats = {
 
 def display_choices(choices):
     for key, (choice_text, _) in choices.items():
-        print(f"{key}: {choice_text}")
+        print(f"{color_text(key, 34)}: {choice_text}")
     
     while True:
         try:
