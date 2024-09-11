@@ -176,18 +176,12 @@ story = {
         'choices': {}
     },
     'loser': {
-        'text': color_text("Oh no! Sadly, you met a tragic end. Would you like to play again? (Y/N)", "32"),
-        'choices': {
-            1: ('Yes', 'start'),
-            2: ('No', 'quit')
-        }
+        'text': color_text("Oh no! Sadly, you met a tragic end.", "32"),
+        'choices': {}
     },
     'winner': {
-        'text': color_text("Congratulations! You survived. Would you like to play again? (Y/N)", "32"),
-        'choices': {
-            1: ('Yes', 'start'),
-            2: ('No', 'quit')
-        }
+        'text': color_text("Congratulations! You survived.", "32"),
+        'choices': {}
     },
     'quit': {
         'text': color_text("Thanks for playing. Goodbye.", "32"),
@@ -278,6 +272,7 @@ def start_game(menu):
              # Handle the scenario where there are no choices (end-game scenarios)
             if current_event == 'loser':
                 survived = False
+                update_player_stats(survived)
                 result = handle_end_game(survived)
                 if result == 'quit':
                     return 'quit'
@@ -285,6 +280,7 @@ def start_game(menu):
                     current_event = 'start'
             elif current_event == 'winner':
                 survived = True
+                update_player_stats(survived)
                 result = handle_end_game(survived)
                 if result == 'quit':
                     return 'quit'
@@ -356,12 +352,14 @@ def handle_end_game(survived):
         print("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ")
     else:
         print("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!")
+        
+    display_stats()
+    
     while True:
-        play_again = input("\nWould you like to play again? (1 = YES or 2 = NO): ").strip().upper()
+        play_again = input("\nWould you like to play again? (1 = YES or 2 = NO): ").strip()
         if play_again == "1":
             return 'start'
         elif play_again == "2":
-            display_stats()
             return 'quit'
         else:
             print("Invalid input. Please enter 1 or 2.")
