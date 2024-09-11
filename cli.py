@@ -336,7 +336,7 @@ def display_stats():
                 percentage = round((count / total) * 100)
             else:
                 percentage = 0
-            choice_stats.append(f"{percentage}% selected choice {choice}")
+            choice_stats.append(f"{percentage}% of players selected choice {choice}")
 
         choice_stats_str = "\n".join(choice_stats)
         tabulated_stats.append([story_part, choice_stats_str])
