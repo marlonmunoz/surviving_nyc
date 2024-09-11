@@ -12,7 +12,7 @@ def play_sound(file_path):
     file_path = os.path.join(SOUND_DIR, file_path )
     return subprocess.Popen(["afplay", file_path])
 
-class Game:
+class Menu:
     def __init__(self):
         self.sound_process = None
 
@@ -168,17 +168,17 @@ story = {
         'choices': {}
     },
     'loser': {
-        'text': "Oh no! Sadly, you met a tragic end. Would you like to play again? (Y/N)",
+        'text': "Oh no! Sadly, you met a tragic end. Would you like to play again? (1 = YES or 2 = NO)",
         'choices': {
-            'Y': ('Yes', 'start'),
-            'N': ('No', 'quit')
+            1: ('Yes', 'start'),
+            2: ('No', 'quit')
         }
     },
     'winner': {
-        'text': "Congratulations! You survived. Would you like to play again? (Y/N)",
+        'text': "Congratulations! You survived. Would you like to play again? (1 = YES or 2 = NO)",
         'choices': {
-            'Y': ('Yes', 'start'),
-            'N': ('No', 'quit')
+            1: ('Yes', 'start'),
+            2: ('No', 'quit')
         }
     },
     'quit': {
@@ -189,163 +189,255 @@ story = {
 
 #####################################################  DATABASE TABLE STUFF  #####################################################
 conn = sqlite3.connect('data.db')
+cursor = conn.cursor()
 
-def create_table():
+def create_players_table():
     sql = """   
-        CREATE TABLE IF NOT EXISTS player (
+        CREATE TABLE IF NOT EXISTS players (
             id INTEGER PRIMARY KEY,
-            username TEXT,
-            score INTEGER,
-            games_played INTEGER
+            username TEXT
         );
     """
-    cursor = conn.cursor()
     cursor.execute(sql)
     conn.commit()
 
-def delete_table():
-    sql = "DROP TABLE IF EXISTS player"
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    conn.commit()
-
-def add_score(username, score, player_choices):
-    """Adds username and score to the db"""
-    sql = """
-        INSERT INTO player (username, score, games_played, choices)
-        VALUES (?, ?, ?, ?)
+def create_choices_table():
+    sql = """   
+        CREATE TABLE IF NOT EXISTS choices (
+            id INTEGER PRIMARY KEY,
+            player_id INTEGER,
+            story_part TEXT,
+            choice INTEGER,
+            FOREIGN KEY (player_id) REFERENCES players (id)
+        );
     """
-    choices_str = ','.join(player_choices)
-    cursor = conn.cursor()
-    cursor.execute(sql, [username, score, 1, choices_str])
+    cursor.execute(sql)
     conn.commit()
 
-class Stats:
-    def view(self):
-        print("Displaying stats...")
+
+player_stats = {
+    'games_played': 0,
+    'games_survived': 0
+}
+
 
 def display_choices(choices):
-    # Print each choice with its corresponding key
-    for key, value in choices.items():
-        print(f"{color_text(key, 34)}: {color_text(value[0], 32)}")  
+    for key, (choice_text, _) in choices.items():
+        print(f"{key}: {choice_text}")
+    
     while True:
         try:
-            selected_choice = int(input("Select a choice: ").strip())
-            if selected_choice in choices:
-                return selected_choice
+            choice = int(input("Select an option: ").strip())
+            if choice in choices:
+                return choice
             else:
-                print("Invalid choice, please try again.")
+                print("Invalid choice. Please try again.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
-def start_game():
-    current_story = story['start']
-    player_choices = [] # Track players choices
+
+def record_choice(player_id, story_part, choice):
+    cursor.execute('''
+        INSERT INTO choices (player_id, story_part, choice)
+        VALUES (?, ?, ?)
+    ''', (player_id, story_part, choice))
+    conn.commit()
+
+
+
+def start_game(menu):
+    username = input("Enter your username: ").strip()
     
-    while True:
-        print(current_story['text'])
-        # check if there are any more choices (death or survival)
-        if not current_story['choices']:
-            handle_end_game(player_choices)
-            break
-        # if theres only one automatic transition, proceed automatically
-        if len(current_story['choices']) == 1 and 'Next' in current_story['choices']:
-            next_key = current_story['choices']['Next'][1]
-            current_story = story[next_key]
+    cursor.execute('''
+        INSERT INTO players (username)
+        VALUES (?)
+    ''', (username,))
+    player_id = cursor.lastrowid  
+
+    current_event = 'start'
+    survived = False
+
+    while current_event != 'quit':
+        event = story[current_event]
+        print(event['text'])
+        
+
+        if 'choices' in event and event['choices']:
+            choice = display_choices(event['choices'])
+            record_choice(player_id, current_event, choice)
+            next_event = event['choices'][choice][1]
         else:
-            #Otherwise prompt the player for input
-            selected_choice = display_choices(current_story['choices'])
-            player_choices.append(selected_choice) # logs players choices
-            next_key = current_story['choices'][selected_choice][1]
-            current_story = story[next_key]
+             # Handle the scenario where there are no choices (end-game scenarios)
+            if current_event == 'loser':
+                survived = False
+                result = handle_end_game(survived)
+                if result == 'quit':
+                    return 'quit'
+                else:
+                    current_event = 'start'
+            elif current_event == 'winner':
+                survived = True
+                result = handle_end_game(survived)
+                if result == 'quit':
+                    return 'quit'
+                else:
+                    current_event = 'start'
 
-def handle_end_game(player_choices):
-    print("\nUnfortunately, you have met a tragic end at the hands of the Big Apple...")
-    # display_leaderboard(player_choices)
-    input("\nPress any key to return to the main menu...")
-    main_menu()
 
-# def display_leaderboard(player_choices):
-#     print("\n======== LEADERBOARD =========")
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT COUNT(*), AVG(score),  AVG(games_played) FROM player")
-#     total_players, avg_score, avg_games_played = cursor.fetchone()
-#     print(f"Total players: {total_players}")
-#     print(f"Average Survivability Rate: {avg_score}")
-#     print(f"Average Games Played: {avg_games_played}")
-#     print("======== Choices Analysis ========")
-#     for choice in player_choices:
-#         cursor.execute(f"SELECT COUNT(*) FROM player WHERE score = ?", (choice,))
-#         similiar_choices = cursor.fetchone()[0]
-#         percentage = (similiar_choices / total_players) * 100
-#         print(f"Choice {choice}: {percentage:.2f}% of players made the same decision.")
-#     print("================================")
+        if 'death' in next_event:
+            current_event = 'loser'
+            survived = False
+        elif 'survive' in next_event:
+            if not story[next_event]['choices']:
+                current_event = 'winner'
+                survived = True
+            else:
+                current_event = next_event
+        elif next_event == 'quit':
+            menu.quit()
+            return 'quit'
+        else:
+            current_event = next_event
+    
+    update_player_stats(survived)
+    handle_end_game(survived)
+
+
+def display_stats():
+     
+    if player_stats['games_played'] > 0:
+        survival_rate = round((player_stats['games_survived'] / player_stats['games_played']) * 100)
+    else:
+        survival_rate = 0
+    print(f"Your Survival Rate: {survival_rate} %")
+
+    excluded_parts = {'loser', 'winner', 'quit'}
+
+    print("Choice Statistics:")
+    choice_count = {key: {i: 0 for i in range(1, 4)} for key, value in story.items() if value['choices'] and key not in excluded_parts}
+    total_count = {key: 0 for key, value in story.items() if value['choices'] and key not in excluded_parts}
+    
+    cursor.execute('SELECT story_part, choice, COUNT(*) FROM choices WHERE story_part NOT IN (?, ?, ?) GROUP BY story_part, choice', ('loser', 'winner', 'quit'))
+    rows = cursor.fetchall()
+    
+    for story_part, choice, count in rows:
+        if story_part in choice_count:
+            choice_count[story_part][choice] = count
+            total_count[story_part] = total_count.get(story_part, 0) + count
+
+    for story_part, counts in choice_count.items():
+        total = total_count.get(story_part, 0)
+        print(f"{story_part}:")
+        for choice, count in counts.items():
+            if total > 0:
+                percentage = round((count / total) * 100)
+            else:
+                percentage = 0
+            print(f"    {percentage}% of players selected choice {choice}: ")
+
+
+
+def update_player_stats(survived):
+    player_stats['games_played'] += 1
+    if survived:
+        player_stats['games_survived'] += 1
+
+
+def handle_end_game(survived):
+    if survived:
+        print("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ")
+    else:
+        print("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!")
+    while True:
+        play_again = input("\nWould you like to play again? (1 = YES or 2 = NO): ").strip().upper()
+        if play_again == "1":
+            return 'start'
+        elif play_again == "2":
+            display_stats()
+            return 'quit'
+        else:
+            print("Invalid input. Please enter 1 or 2.")
+
+
+
+
 
 #######################################################  MAIN MENU   ############################################################
 def main_menu():
-    create_table()
-    game = Game()
-    game.start()
-    stats = Stats()
+    create_players_table()
+    create_choices_table()
+    menu = Menu()
+    menu.start()
     
-    print(color_text(""" 
-        --------------------------------------------------------------------
-        --------------------------------------------------------------------
-          
-       
-        ███████╗██╗   ██╗██████╗ ██╗   ██╗██╗██╗   ██╗██╗███╗   ██╗ ██████╗     
-        ██╔════╝██║   ██║██╔══██╗██║   ██║██║██║   ██║██║████╗  ██║██╔════╝     
-        ███████╗██║   ██║██████╔╝██║   ██║██║██║   ██║██║██╔██╗ ██║██║  ███╗    
-        ╚════██║██║   ██║██╔══██╗╚██╗ ██╔╝██║╚██╗ ██╔╝██║██║╚██╗██║██║   ██║    
-        ███████║╚██████╔╝██║  ██║ ╚████╔╝ ██║ ╚████╔╝ ██║██║ ╚████║╚██████╔╝    
-        ╚══════╝ ╚═════╝ ╚═╝███╗╝  ██╗██╗ ╚═██╗╚██████╗██╗═╝  ╚═══╝ ╚═════╝     
-                            ████╗  ██║╚██╗ ██╔╝██╔════╝██║                      
-                            ██╔██╗ ██║ ╚████╔╝ ██║     ██║                      
-                            ██║╚██╗██║  ╚██╔╝  ██║     ╚═╝                      
-                            ██║ ╚████║   ██║   ╚██████╗██╗                      
-                            ╚═╝  ╚═══╝   ╚═╝    ╚═════╝╚═╝                      
-
-
-                 __  __
-                 |. ||. |    .|
-                 || ||| |    | |                W
-                 |: ||: |    |'|               [ ]         ._____
-                 |  ||  |   |  |     .--'|      3   .---"| |.   |'           
-             _   |  ||  |-. |  | __  |.  |     /|  _|__  | ||   |__
-             .-'|  _|  ||  | ||   '-  | ||    \|// / |   |' | |    | |'
-             |' | |.|  ||  | ||       '-'    -( )-|  |   |  | |    | |
-             __|  '-' '  ''  ' ""       '       J V |  `   -  |_'    ' |__
-                                         ___  '    /
-                                         \  \/    |                          
-        --------------------------------------------------------------------
-        --------------------------------------------------------------------
-        """, 33))
-    print(color_text("                                1. Start Your Journey", 32))
-    print("                                2. View Stats")
-    print(color_text("                                3. Quit", 30))
-    print(" ")
-
     while True:
-        choice = input("                                Enter your choice >>> ")
+        print(color_text(""" 
+            --------------------------------------------------------------------
+            --------------------------------------------------------------------
+            
+        
+            ███████╗██╗   ██╗██████╗ ██╗   ██╗██╗██╗   ██╗██╗███╗   ██╗ ██████╗     
+            ██╔════╝██║   ██║██╔══██╗██║   ██║██║██║   ██║██║████╗  ██║██╔════╝     
+            ███████╗██║   ██║██████╔╝██║   ██║██║██║   ██║██║██╔██╗ ██║██║  ███╗    
+            ╚════██║██║   ██║██╔══██╗╚██╗ ██╔╝██║╚██╗ ██╔╝██║██║╚██╗██║██║   ██║    
+            ███████║╚██████╔╝██║  ██║ ╚████╔╝ ██║ ╚████╔╝ ██║██║ ╚████║╚██████╔╝    
+            ╚══════╝ ╚═════╝ ╚═╝███╗╝  ██╗██╗ ╚═██╗╚██████╗██╗═╝  ╚═══╝ ╚═════╝     
+                                ████╗  ██║╚██╗ ██╔╝██╔════╝██║                      
+                                ██╔██╗ ██║ ╚████╔╝ ██║     ██║                      
+                                ██║╚██╗██║  ╚██╔╝  ██║     ╚═╝                      
+                                ██║ ╚████║   ██║   ╚██████╗██╗                      
+                                ╚═╝  ╚═══╝   ╚═╝    ╚═════╝╚═╝                      
+
+
+                    __  __
+                    |. ||. |    .|
+                    || ||| |    | |                W
+                    |: ||: |    |'|               [ ]         ._____
+                    |  ||  |   |  |     .--'|      3   .---"| |.   |'           
+                _   |  ||  |-. |  | __  |.  |     /|  _|__  | ||   |__
+                .-'|  _|  ||  | ||   '-  | ||    \|// / |   |' | |    | |'
+                |' | |.|  ||  | ||       '-'    -( )-|  |   |  | |    | |
+                __|  '-' '  ''  ' ""       '       J V |  `   -  |_'    ' |__
+                                            ___  '    /
+                                            \  \/    |                          
+            --------------------------------------------------------------------
+            --------------------------------------------------------------------
+            """, 33))
+        print(color_text("                                1. Start Your Journey", 32))
+        print("                                2. View Stats")
+        print(color_text("                                3. Quit", 30))
+        print(" ")
+
+        choice = input("                                Enter your choice >>> ").strip()
 
         if choice == '1':
-            if game.sound_process:
-                game.sound_process.terminate()
-            game.sound_process = play_sound("CGA_sound.mp3")
-            start_game()
+            if menu.sound_process:
+                menu.sound_process.terminate()
+            menu.sound_process = play_sound("CGA_sound.mp3")
+            result = start_game(menu)
+            if result == 'quit':
+                break
         elif choice == '2':
-            stats.view()
+            display_stats()
         elif choice == '3':
-            game.quit()
+            menu.quit()
             print("Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
 
 
+
 if __name__ == '__main__':
     main_menu()
     
+    
 
+# def close_connection():
+#     conn.close()
 
+# if __name__ == '__main__':
+#     try:
+#         main_menu()
+#     finally:
+#         close_connection()
 
