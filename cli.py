@@ -283,8 +283,10 @@ def start_game(menu):
                     current_event = 'start'
 
         if 'death' in next_event:
-            current_event = 'loser'
+            print(story[next_event]['text'])
+            current_event = next_event
             survived = False
+            current_event = 'loser'
         elif 'survive' in next_event:
             if not story[next_event]['choices']:
                 current_event = 'winner'
@@ -358,9 +360,9 @@ def update_player_stats(survived):
 
 def handle_end_game(survived):
     if survived:
-        print("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ")
+        print(color_text("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ", 34))
     else:
-        print("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!")
+        print(color_text("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!", 34))
         
     display_stats()
     
