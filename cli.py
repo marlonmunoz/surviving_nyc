@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import subprocess
+import sys
 
 ######################################################  MAIN MENU PIZAAZZ  ########################################################
 SOUND_DIR = "./shade_sound"
@@ -17,14 +18,14 @@ class Menu:
         self.sound_process = None
 
     def start(self):
-        print(color_text("Game has started!", 30))
+        print(color_text("Loading game menu...", 30))
         self.sound_process = play_sound("Survivin_NYC_main_menu.mp3")
 
     def quit(self):
         if self.sound_process:
             self.sound_process.terminate()
             self.sound_process = None
-        print(color_text("Game has quit!", 31))
+        print(color_text("Game ending...", 31))
 
 ###################################################  DICTIONARY  ##############################################################                    
 story = {
@@ -246,14 +247,8 @@ def record_choice(player_id, story_part, choice):
     conn.commit()
 
 
-
 def start_game(menu):
-    username = input("Enter your username: ").strip()
-    
-    cursor.execute('''
-        INSERT INTO players (username)
-        VALUES (?)
-    ''', (username,))
+
     player_id = cursor.lastrowid  
 
     current_event = 'start'
@@ -287,7 +282,6 @@ def start_game(menu):
                 else:
                     current_event = 'start'
 
-
         if 'death' in next_event:
             current_event = 'loser'
             survived = False
@@ -297,7 +291,7 @@ def start_game(menu):
                 survived = True
             else:
                 current_event = next_event
-        elif next_event == 'quit':
+        elif current_event == 'quit':
             menu.quit()
             return 'quit'
         else:
@@ -340,7 +334,6 @@ def display_stats():
             print(f"    {percentage}% of players selected choice {choice}: ")
 
 
-
 def update_player_stats(survived):
     player_stats['games_played'] += 1
     if survived:
@@ -356,17 +349,8 @@ def handle_end_game(survived):
     display_stats()
     
     while True:
-        play_again = input("\nWould you like to play again? (1 = YES or 2 = NO): ").strip()
-        if play_again == "1":
-            return 'start'
-        elif play_again == "2":
-            return 'quit'
-        else:
-            print("Invalid input. Please enter 1 or 2.")
-
-
-
-
+        input("\nTo return to the main menu, press the Enter key...")
+        main_menu()
 
 #######################################################  MAIN MENU   ############################################################
 def main_menu():
@@ -419,15 +403,24 @@ def main_menu():
             if menu.sound_process:
                 menu.sound_process.terminate()
             menu.sound_process = play_sound("CGA_sound.mp3")
+            username = input("Enter your username: ").strip()
+            cursor.execute('''
+                INSERT INTO players (username)
+                VALUES (?)
+            ''', (username,))
             result = start_game(menu)
             if result == 'quit':
-                break
+                return 'quit'
+    
         elif choice == '2':
             display_stats()
+
         elif choice == '3':
             menu.quit()
             print("Goodbye!")
+            sys.exit()
             break
+
         else:
             print("Invalid choice. Please try again.")
 
