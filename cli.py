@@ -178,15 +178,15 @@ story = {
     'loser': {
         'text': color_text("Oh no! Sadly, you met a tragic end. Would you like to play again? (Y/N)", "32"),
         'choices': {
-            'Y': ('Yes', 'start'),
-            'N': ('No', 'quit')
+            1: ('Yes', 'start'),
+            2: ('No', 'quit')
         }
     },
     'winner': {
         'text': color_text("Congratulations! You survived. Would you like to play again? (Y/N)", "32"),
         'choices': {
-            'Y': ('Yes', 'start'),
-            'N': ('No', 'quit')
+            1: ('Yes', 'start'),
+            2: ('No', 'quit')
         }
     },
     'quit': {
