@@ -2,6 +2,7 @@ import sqlite3
 import os
 import subprocess
 import sys
+from tabulate import tabulate
 
 ######################################################  MAIN MENU PIZAAZZ  ########################################################
 SOUND_DIR = "./shade_sound"
@@ -264,7 +265,7 @@ def start_game(menu):
             record_choice(player_id, current_event, choice)
             next_event = event['choices'][choice][1]
         else:
-             # Handle the scenario where there are no choices (end-game scenarios)
+             # Handles the scenario where there are no choices >>>
             if current_event == 'loser':
                 survived = False
                 update_player_stats(survived)
@@ -304,29 +305,15 @@ def start_game(menu):
 
 
 def display_stats():
-    # Calculate the number of lines to push the stats to the bottom
-    terminal_height = 5  # Adjust this value based on your terminal height
-    stats_lines = 5  # Adjust this value based on the number of lines in your stats
-    padding_lines = terminal_height - stats_lines
-
-    # Print padding lines to push the stats to the bottom
-    print("\n" * padding_lines)
-
-    # Calculate the padding required to center the text horizontally
-    terminal_width = 80  # Adjust this value based on your terminal width
-    max_line_length = max(len("Your Survival Rate: 100 %"), len("Choice Statistics:"))  # Adjust based on the longest line
-    padding_spaces = (terminal_width - max_line_length) // 2
 
     if player_stats['games_played'] > 0:
         survival_rate = round((player_stats['games_survived'] / player_stats['games_played']) * 100)
     else:
         survival_rate = 0
-    print(" " * padding_spaces + f"     Your Survival Rate: {survival_rate} %")
-    print("  ")
+    print(f"Your Survival Rate: {survival_rate} %")
 
     excluded_parts = {'loser', 'winner', 'quit'}
-
-    print(" " * padding_spaces + "          Choice Statistics:")
+    
     choice_count = {key: {i: 0 for i in range(1, 4)} for key, value in story.items() if value['choices'] and key not in excluded_parts}
     total_count = {key: 0 for key, value in story.items() if value['choices'] and key not in excluded_parts}
     
@@ -338,17 +325,23 @@ def display_stats():
             choice_count[story_part][choice] = count
             total_count[story_part] = total_count.get(story_part, 0) + count
 
+    tabulated_stats = []
+
     for story_part, counts in choice_count.items():
         total = total_count.get(story_part, 0)
-        print(" " * padding_spaces + f"{story_part}:")
+        choice_stats = []
+        
         for choice, count in counts.items():
             if total > 0:
                 percentage = round((count / total) * 100)
             else:
                 percentage = 0
-            print(" " * padding_spaces + f"    {percentage}% of players selected choice {choice}: ")
-    
-    # Wait for user input to return to the menu
+            choice_stats.append(f"{percentage}% selected choice {choice}")
+
+        choice_stats_str = "\n".join(choice_stats)
+        tabulated_stats.append([story_part, choice_stats_str])
+            
+    print(tabulate(tabulated_stats, headers=["Scenario", "Choice Stats"], tablefmt="fancy_grid"))
     input(color_text("\nPress Enter to return to the menu...", 34))
 
 
@@ -447,8 +440,3 @@ def main_menu():
 
 if __name__ == '__main__':
     main_menu()
-    
-    
-
-
-
