@@ -319,7 +319,7 @@ def display_stats():
         survival_rate = round((player_stats['games_survived'] / player_stats['games_played']) * 100)
     else:
         survival_rate = 0
-    print(" " * padding_spaces + f"         Your Survival Rate: {survival_rate} %")
+    print(" " * padding_spaces + f"     Your Survival Rate: {survival_rate} %")
     print("  ")
 
     excluded_parts = {'loser', 'winner', 'quit'}
@@ -358,9 +358,9 @@ def update_player_stats(survived):
 
 def handle_end_game(survived):
     if survived:
-        print(color_text("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ", 34))
+        print("\nCongratulations! You survived the Big Apple! You are a TRUE New Yorker ;) ")
     else:
-        print(color_text("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!", 34))
+        print("\nSadly, you have met a tragic end in the Big Apple :( You're not cut out for the city life!")
         
     display_stats()
     
@@ -433,6 +433,7 @@ def main_menu():
 
         elif choice == '3':
             menu.quit()
+            play_sound("GO_sound_03.mp3")
             print("Goodbye!")
             sys.exit()
             break
@@ -447,12 +448,5 @@ if __name__ == '__main__':
     
     
 
-# def close_connection():
-#     conn.close()
 
-# if __name__ == '__main__':
-#     try:
-#         main_menu()
-#     finally:
-#         close_connection()
 
