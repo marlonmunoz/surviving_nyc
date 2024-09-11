@@ -29,7 +29,7 @@ class Menu:
 ###################################################  DICTIONARY  ##############################################################                    
 story = {
     'start': {
-        'text': 'You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:',
+        'text': color_text('You wake up in your Manhattan apartment. Your alarm is blaring at 6:30 AM. Do you:', "32"),
         'choices': {
             1: ('Hit snooze and sleep in', 'snooze'),
             2: ('Get up right away and start the day', 'morning_routine'),
@@ -81,8 +81,32 @@ story = {
             2: ('Sit quietly and hope for the best', 'rideshare_survive')
         }
     },
+    'subway_survive': {
+        'text': "You manage to avoid the chaos, and the rat scurries away. You reach work a bit shaken but alive.",
+        'choices': {
+            1: ('Go to Workplace Dilemma', 'workplace_dilemma')
+        }
+    },
+    'hospital_escape': {
+        'text': "You try to catch the rat, but you trip and knock yourself unconscious. You wake up in the hospital but survive.",
+        'choices': {
+            1: ("Go to Workplace Dilemma", 'workplace_dilemma')
+        }
+    },
+    'performer_survival': {
+        'text': "You decide to watch the street performance. The performer grabs you for his act, but you narrowly avoid being run over by a car that jumps the curb. You survive and make it to work!",
+        'choices': {
+            1: ("Go to Workplace Dilemma", 'workplace_dilemma')
+        }
+    },
+    'rideshare_survive': {
+        'text': "You sit quietly while the driver speeds through the streets. You narrowly avoid a crash and arrive at work, alive but late.",
+        'choices': {
+            1: ("Go to Workplace Dilemma", 'workplace_dilemma')
+        }
+    },
     'workplace_dilemma': {
-        'text': "You finally make it to your offic, but your boss is standing at the entrance looking furious. You're laste for an important meeting. Do you:",
+        'text': "You finally make it to your office, but your boss is standing at the entrance looking furious. You're late for an important meeting. Do you:",
         'choices': {
             1: ('Make up an excuse', 'death_fired_by_boss'),
             2: ('Apologize sincerely', 'office_drama'),
@@ -143,22 +167,6 @@ story = {
         'text': "You eat the suspicious hot dog. It tastes awful. Within minutes, you collapse from food poisoning and die.",
         'choices': {}
     },
-    'subway_survive': {
-        'text': "You manage to avoid the chaos, and the rat scurries away. You reach work a bit shaken but alive.",
-        'choices': {'Next': ("Go to Workplace Dilemma", 'workplace_dilemma')}
-    },
-    'hospital_escape': {
-        'text': "You try to catch the rat, but you trip and knock yourself unconscious. You wake up in the hospital but survive the day.",
-        'choices': {'Next': ("Go to Workplace Dilemma", 'workplace_dilemma')}
-    },
-    'performer_survival': {
-        'text': "You decide to watch the street performance. The performer grabs you for his act, but you narrowly avoid being run over by a car that jumps the curb. You survive and make it to work!",
-        'choices': {'Next': ("Go to Workplace Dilemma", 'workplace_dilemma')}
-    },
-    'rideshare_survive': {
-        'text': "You sit quietly while the driver speeds through the streets. You narrowly avoid a crash and arrive at work, alive but late.",
-        'choices': {'Next': ("Go to Workplace Dilemma", 'workplace_dilemma')}
-    },
     'survive_the_day': {
         'text': "You wisely ignore the office gossip and make it through the day unscathed. You survive and head home.",
         'choices': {}
@@ -168,17 +176,17 @@ story = {
         'choices': {}
     },
     'loser': {
-        'text': "Oh no! Sadly, you met a tragic end. Would you like to play again? (1 = YES or 2 = NO)",
+        'text': "Oh no! Sadly, you met a tragic end. Would you like to play again? (Y/N)",
         'choices': {
-            1: ('Yes', 'start'),
-            2: ('No', 'quit')
+            'Y': ('Yes', 'start'),
+            'N': ('No', 'quit')
         }
     },
     'winner': {
-        'text': "Congratulations! You survived. Would you like to play again? (1 = YES or 2 = NO)",
+        'text': "Congratulations! You survived. Would you like to play again? (Y/N)",
         'choices': {
-            1: ('Yes', 'start'),
-            2: ('No', 'quit')
+            'Y': ('Yes', 'start'),
+            'N': ('No', 'quit')
         }
     },
     'quit': {
