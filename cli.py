@@ -270,7 +270,7 @@ def start_game(menu):
             record_choice(player_id, current_event, choice)
             next_event = event['choices'][choice][1]
         else:
-             # Handles the scenario where there are no choices >>>
+             # Handles the scenarios where there are no choices >>>
             if current_event == 'loser':
                 survived = False
                 update_player_stats(survived)
@@ -322,12 +322,12 @@ def display_stats():
     print('                   ----------------------------------------------------------')
     print(f"                                Your Survival Rate: {survival_rate} %")
 
-    excluded_parts = {'loser', 'winner', 'quit'}
+    excluded_parts = {'loser', 'winner', 'quit', 'subway_survive', 'fired_by_boss', 'fired_sneak', 'rideshare_survive', 'performer_survival', 'hospital_escape'}
     
     choice_count = {key: {i: 0 for i in range(1, 4)} for key, value in story.items() if value['choices'] and key not in excluded_parts}
     total_count = {key: 0 for key, value in story.items() if value['choices'] and key not in excluded_parts}
     
-    cursor.execute('SELECT story_part, choice, COUNT(*) FROM choices WHERE story_part NOT IN (?, ?, ?) GROUP BY story_part, choice', ('loser', 'winner', 'quit'))
+    cursor.execute('SELECT story_part, choice, COUNT(*) FROM choices WHERE story_part NOT IN (?, ?, ?, ?, ?, ?, ?, ?, ?) GROUP BY story_part, choice', ('loser', 'winner', 'quit', 'subway_survive', 'fired_by_boss', 'fired_sneak', 'rideshare_survive', 'performer_survival', 'hospital_escape'))
     rows = cursor.fetchall()
     
     for story_part, choice, count in rows:
