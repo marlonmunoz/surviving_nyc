@@ -183,7 +183,7 @@ story = {
         'choices': {}
     },
     'loser': {
-        'text': color_text("Oh no! Sadly, you couldn't stay alive in the concrete jungle.", "32"),
+        'text': color_text("Oh no! Sadly, you couldn't stay alive in the concrete jungle.", "31"),
         'choices': {}
     },
     'winner': {
