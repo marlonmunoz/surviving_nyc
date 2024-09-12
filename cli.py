@@ -97,7 +97,7 @@ story = {
         }
     },
     'performer_survival': {
-        'text': color_text("You decide to watch the street performance. The performer grabs you for his act, but you narrowly avoid being run over by a car that jumps the curb. You survive and make it to work!", "32"),
+        'text': color_text("You decide to watch the street performance. The performer grabs you for his act, but you narrowly avoid being hit by a flaming sword. You survive and make it to work!", "32"),
         'choices': {
             1: ("Press 1 to enter the office.", 'workplace_dilemma')
         }
