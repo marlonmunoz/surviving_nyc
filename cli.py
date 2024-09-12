@@ -42,7 +42,7 @@ story = {
         'choices': {
             1: ('Take the subway and hope for the best', 'subway_chaos'),
             2: ('Call a rideshare. Feeeling lazy.', 'rideshare_madness'),
-            2: ('Walk to work. Wateva! Already late!', 'street_hazards'),
+            3: ('Walk to work. Wateva! Already late!', 'street_hazards'),
         }
     },
     'morning_routine': {
