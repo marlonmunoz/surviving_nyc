@@ -33,7 +33,7 @@ story = {
     'start': {
         'text': color_text('You wake up in your Manhattan apartment. You can hear the cries of the city. Your alarm is blaring at 6:30 AM. Do you:', "32"),
         'choices': {
-            1: ('Hell nah! Hit snooze and sleep in.', 'snooze'),
+            1: ('Oh hell nah! Hit snooze and sleep in.', 'snooze'),
             2: ('Get up right away and start the day. Gotta get that dough!', 'morning_routine'),
         }
     },
@@ -49,7 +49,7 @@ story = {
         'text': color_text("You wake up on time, feeling slightly groggy but ready for the day. Do You:", "32"),
         'choices': {
             1: ('Take the subway to work. Gotta love the iron horse!', 'subway_chaos'),
-            2: ('Call a rideshare. Ugh! So lazy.', 'rideshare_madness'),
+            2: ("Call a rideshare. Ugh! I'm so lazy.", 'rideshare_madness'),
             3: ('Walk to work. I got time.', 'street_hazards')
         }
     },
@@ -57,12 +57,12 @@ story = {
         'text': color_text("You enter the subway. It's packed, and tensions are high. A fight breaks out between a drug addict and the conductor. Do you:", "32"),
         'choices': {
             1: ('Try to stop the fight. Come on, Im tryin to get to work!', 'death_subway_fight'),
-            2: ('Move to another car. Can not deal with this.', 'rat_encounter'),
+            2: ('Move to another car. Can NOT deal with this today.', 'rat_encounter'),
             3: ('Ignore it and listen to music. Just another day in the big apple.', 'death_electrocution')
         }
     },
     'rat_encounter': {
-        'text': color_text("You move to another car and find yourself face-to-face with a rat. Do you:", "32"),
+        'text': color_text("You move to another car and see a rat at the other end. It scurries closer fearlessly. Do you:", "32"),
         'choices': {
             1: ("Kick the rat. I don't play!", 'death_rat_bite'),
             2: ('Aw how cute! Try to catch rat', 'hospital_escape'),
@@ -70,18 +70,18 @@ story = {
         }
     },
     'street_hazards': {
-        'text': color_text("You decide to walk to work. Nothin like walking in the city. Midway, you encounter a street performer juggling flaming swords. Wow! Do you:", "32"),
+        'text': color_text("You decide to walk to work. Nothing like walking in the city. Midway, you encounter a street performer juggling flaming swords. Wow! Do you:", "32"),
         'choices': {
             1: ("Confront the performer. I'm curious...", 'death_street_performer_sword'),
-            2: ('Try to walk around him. Aint nobody got time for that!', 'death_sewer_fall'),
+            2: ("Try to walk around him. Ain't nobody got time for that!", 'death_sewer_fall'),
             3: ('Watch the performance. Love this city!', 'performer_survival')
         }
     },
     'rideshare_madness': {
-        'text': color_text("You call a rideshare. The driver is blasting music and speeding recklessly. Crazy taxi! Do you:", "32"),
+        'text': color_text("You call a rideshare. The driver is blasting music and speeding recklessly, swerving in and out of traffic. Crazy taxi! Do you:", "32"),
         'choices': {
-            1: ('Tell the driver to slow down. Come on driver, not looking to die today.', 'death_rideshare_crash'),
-            2: ('Sit quietly and hope for the best. Oooo sah.', 'rideshare_survive')
+            1: ('Tell the driver to slow down. Come on driver, not looking to die today!', 'death_rideshare_crash'),
+            2: ('Sit quietly and hope for the best. Wooo sah.', 'rideshare_survive')
         }
     },
     'subway_survive': {
@@ -103,13 +103,13 @@ story = {
         }
     },
     'rideshare_survive': {
-        'text': color_text("You sit quietly while the driver speeds through the streets. Wow. Youn have the patience of a Tibetan monk. You narrowly avoid a crash and arrive at work, alive but late.", "32"),
+        'text': color_text("You sit quietly while the driver speeds through the streets. Wow. You have the patience of a Tibetan monk! You narrowly avoid a crash and arrive at work, alive but late.", "32"),
         'choices': {
             1: ("Press 1 to enter the office.", 'workplace_dilemma')
         }
     },
     'workplace_dilemma': {
-        'text': color_text("You finally make it to your office, but your boss is standing at the entrance looking furious. You've done it now! You're late for an important meeting. Do you:", "32"),
+        'text': color_text("You finally make it to your office, but your boss is standing at the entrance looking furious. You've done it now! You're late for an important meeting you forgot about. Do you:", "32"),
         'choices': {
             1: ('Make up an excuse. My dog ate my toothbrush!', 'fired_by_boss'),
             2: ("Apologize sincerely. Im so sorry, boss. I'm a careless buffon sometimes.", 'office_drama'),
@@ -130,28 +130,28 @@ story = {
         }
     },
     'fired_sneak': {
-        'text': color_text("You sneak past your boss, but he sees you later and fires you. You leave the office immediately.", "32"),
+        'text': color_text("You sneak past your boss, but he sees you later and fires you. Real smooth. You have to leave the office immediately.", "32"),
         'choices': {
             1: ('Press 1 to walk to the unemployment office...', 'unemployment_blues')
         }
     },
     'unemployment_blues': {
-        'text': color_text("After being fired, you're walking to the unemployment office. You pass a street vendor selling suspiciously cheap hot dogs. Jobless in NYC. Gotta ccut costs! Do you:", "32"),
+        'text': color_text("After being fired, you're walking to the unemployment office. You pass a street vendor selling suspiciously cheap hot dog's. Jobless in NYC. Gotta cut some costs! Do you:", "32"),
         'choices': {
             1: ('Eat the hot dog. OMG so hungry!', 'death_food_poisoning'),
             2: ('Ignore it and keep walking. Those street vendors are disgusting!', 'survive_unemployment')
         }
     },
     'death_subway_fight': {
-        'text': color_text("You try to break up the fight but get caught in the crossfire. Tryin to be a hero, huh? The drug addict stabs you with a rusty needle! You die from blood poisoning.", "32"),
+        'text': color_text("You try to break up the fight but get caught in the crossfire. Trying to be a hero, huh? The drug addict stabs you with a rusty needle! You die from blood poisoning.", "32"),
         'choices': {}
     },
     'death_electrocution': {
-        'text': color_text("While ignoring the fight, you get caught in the crossfire. You try to switch cars while it's moving, but fall in betweeen the cars, electrocuting you. You are dead.", "32"),
+        'text': color_text("While ignoring the fight, you get caught in the crossfire. You try to switch cars while it's moving, but fall in betweeen the cars, and get electrocuted. You are dead.", "32"),
         'choices': {}
     },
     'death_rat_bite': {
-        'text': color_text("You kick the rat, but it bites your foot, transmitting a deadly disease. You start foaming at the mouth. You die shortly after.", "32"),
+        'text': color_text("You kick the rat, but it bites your foot, transmitting a deadly disease. You fool! You start foaming at the mouth. You die shortly after.", "32"),
         'choices': {}
     },
     'death_street_performer_sword': {
@@ -171,7 +171,7 @@ story = {
         'choices': {}
     },
     'death_food_poisoning': {
-        'text': color_text("You eat the suspicious, cheap hot dog. It tastes awful. Within minutes, you start choking on a chunk of weird hot dog. You collapse and die.", "32"),
+        'text': color_text("You eat the suspicious, cheap hot dog. It tastes awful. Within minutes, you start choking on a weird hot dog chunk. You collapse and die.", "32"),
         'choices': {}
     },
     'survive_the_day': {
@@ -183,11 +183,11 @@ story = {
         'choices': {}
     },
     'loser': {
-        'text': color_text("Oh no! Sadly, you met a tragic end.", "32"),
+        'text': color_text("Oh no! Sadly, you couldn't stay alive in the concrete jungle.", "32"),
         'choices': {}
     },
     'winner': {
-        'text': color_text("Congratulations! You survived.", "32"),
+        'text': color_text("Yerrrrr!! Good job! You survived. But tomorrow is another story...", "32"),
         'choices': {}
     },
     'quit': {
