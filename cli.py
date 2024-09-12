@@ -311,11 +311,16 @@ def start_game(menu):
 
 def display_stats():
 
+    console_width = os.get_terminal_size().columns
+
+
     if player_stats['games_played'] > 0:
         survival_rate = round((player_stats['games_survived'] / player_stats['games_played']) * 100)
     else:
         survival_rate = 0
-    print(f"Your Survival Rate: {survival_rate} %")
+    print('                   ----------------------------------------------------------')
+    print('                   ----------------------------------------------------------')
+    print(f"                                Your Survival Rate: {survival_rate} %")
 
     excluded_parts = {'loser', 'winner', 'quit'}
     
@@ -345,8 +350,14 @@ def display_stats():
 
         choice_stats_str = "\n".join(choice_stats)
         tabulated_stats.append([story_part, choice_stats_str])
-            
-    print(tabulate(tabulated_stats, headers=["Scenario", "Choice Stats"], tablefmt="fancy_grid"))
+    
+    table = tabulate(tabulated_stats, headers=["Scenario", "Choice Stats"], tablefmt="fancy_grid")
+    
+    # Center the table
+    table_lines = table.split('\n')
+    centered_table = "\n".join(line.center(console_width) for line in table_lines)
+    print(centered_table)
+
     input(color_text("\nPress Enter to return to the menu...", 34))
 
 
@@ -377,10 +388,10 @@ def main_menu():
     
     while True:
         print(color_text(""" 
+                         
             --------------------------------------------------------------------
             --------------------------------------------------------------------
-            
-        
+                         
             ███████╗██╗   ██╗██████╗ ██╗   ██╗██╗██╗   ██╗██╗███╗   ██╗ ██████╗     
             ██╔════╝██║   ██║██╔══██╗██║   ██║██║██║   ██║██║████╗  ██║██╔════╝     
             ███████╗██║   ██║██████╔╝██║   ██║██║██║   ██║██║██╔██╗ ██║██║  ███╗    
@@ -392,9 +403,7 @@ def main_menu():
                                 ██║╚██╗██║  ╚██╔╝  ██║     ╚═╝                      
                                 ██║ ╚████║   ██║   ╚██████╗██╗                      
                                 ╚═╝  ╚═══╝   ╚═╝    ╚═════╝╚═╝                      
-
-
-                    __  __
+                     __  __
                     |. ||. |    .|
                     || ||| |    | |                W
                     |: ||: |    |'|               [ ]         ._____
@@ -402,7 +411,7 @@ def main_menu():
                 _   |  ||  |-. |  | __  |.  |     /|  _|__  | ||   |__
                 .-'|  _|  ||  | ||   '-  | ||    \|// / |   |' | |    | |'
                 |' | |.|  ||  | ||       '-'    -( )-|  |   |  | |    | |
-                __|  '-' '  ''  ' ""       '       J V |  `   -  |_'    ' |__
+              __|  '-' '  ''  ' ""       '       J V |  `   -  |_'    ' |__
                                             ___  '    /
                                             \  \/    |                          
             --------------------------------------------------------------------
