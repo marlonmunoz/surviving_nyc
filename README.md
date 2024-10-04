@@ -1,5 +1,8 @@
 # Surviving NYC!
-### Contributors: Marlon Munoz, Stephen Adler, and Sama Durani
+
+![Surviving NYC](snyc.png)
+
+### Contributors: Marlon Munoz, Stephen Adler, Sama Durani
 
 
 ## Introduction 
