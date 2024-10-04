@@ -1,5 +1,5 @@
-# Surviving NYC!
-
+# PYTHON-GAME: Surviving NYC!
+![Surviving NYC](snyc.png)
 # Introduction 
 Surviving NYC! is a Python 'choose your own adventure' game that simulates a first-person experience navigating through a day in New York City. The player is presented with a prompt and must select from a list of actions to determine the next event in the adventure. The decisions you make can lead you home at the end of the long day or to your final destination. Get ready to dodge the chaos of the city, face the consequences your actions, and learn if you have what it takes to survive in the Big Apple!
 
