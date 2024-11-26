@@ -51,4 +51,4 @@ Surviving NYC! is a Python CLI-based 'choose your own adventure' game that simul
 ## Future Goals
 - **Multiple Endings**: Implement more branching storylines and additional character choices.
 - **Expanded Soundtrack**: Add a wider variety of sound effects and music tracks to enhance the roleplay experience.
-- **High Scores Table**: Generate a scoreboard that highlights top players based on survival rate.
+- **Leaderboard**: Generate a scoreboard that highlights top five players based on survival rate.
